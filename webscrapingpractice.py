@@ -2,29 +2,32 @@ from bs4 import BeautifulSoup
 import csv
 import time
 import requests
+import pandas as pd
 start_url = 'https://en.wikipedia.org/wiki/List_of_brightest_stars_and_other_record_stars'
 time.sleep(1)
+page = requests.get(start_url, verify=False)
+soup = BeautifulSoup(page.text,"html.parser")
+starTable = soup.find("table")
+tableRows = starTable.find_all("tr")
+temp_list = []
+for trtags in tableRows:
+    tdTags = trtags .find_all("td")
+    row = [i.text.rstrip() for i in tdTags]
+    temp_list.append(row)
+starNames = []
+starDist= []
+starMass = []
+starRadius = []
+starLum = []
 
-headers = ["name","distance", "mass", "radius"]
-starData = []
-def webScrape():
-    page = requests.get(start_url, verify=False)
-    soup = BeautifulSoup(page.content,"html.parser")
-    temp_list = []
-    for trtags in soup.find_all("tr"):
-        tdTags = trtags.find_all("td")
-        for index,tdtag in enumerate(tdTags):
-            try:
-                if(index == 0):
-                    temp_list.append(tdtag.find_all("a")[0].contents[0])
-                else:
-                    temp_list.append(tdtag.contents[0])
-            except:
-                temp_list.append("")
-        starData.append(temp_list)
-webScrape()
-with open("stars.csv","w") as f:
-    writer = csv.writer(f)
-    writer.writerow(headers)
-    writer.writerows(starData)
+for i in range(1,len(temp_list)):
+    starNames.append(temp_list[i][1])
+    starDist.append(temp_list[i][3])
+    starMass.append(temp_list[i][5])
+    starRadius.append(temp_list[i][6])
+    starLum.append(temp_list[i][7])
+df2 = pd.DataFrame(list(zip(starNames,starDist,starMass,starRadius,starLum)),columns=['Star_name','Distance','Mass','Radius','Luminosity'])
+
+df2.to_csv("stars.csv")
+
 
