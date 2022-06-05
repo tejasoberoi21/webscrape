@@ -34,7 +34,7 @@ start_url = 'https://en.wikipedia.org/wiki/List_of_brown_dwarfs'
 page = requests.get(start_url, verify=False)
 soup = BeautifulSoup(page.text,"html.parser")
 tables = soup.find_all("table")
-tableRows = tables.find_all("tr")
+tableRows = tables[3].find_all("tr")
 temp_list = []
 for trtags in tableRows:
     tdTags = trtags.find_all("td")
