@@ -18,10 +18,13 @@ headers2 = dataset_2[0]
 data1 = dataset_1[1:]
 data2 = dataset_2[1:]
 for row in data1:
-    row[3] = float(row[3])
-    row[4]=float(row[4])
-    row[4]*=0.102763
-    row[3]*=0.000954588
+    try:
+        row[3] = float(row[3])
+        row[4]=float(row[4])
+        row[4]*=0.102763
+        row[3]*=0.000954588
+    except:
+        pass
 
     
 with open("mergedStars.csv",mode = "w") as f:
