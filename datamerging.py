@@ -26,8 +26,18 @@ for row in data1:
     except:
         pass
 
-    
+rows = []    
 with open("mergedStars.csv",mode = "w") as f:
     writer = csv.writer(f)
-    writer.writerow(headers + headers2)
-    writer.writerows(data1 + data2)
+    writer.writerow(headers2 + headers)
+    writer.writerows(data2 + data1)
+with open("mergedStars.csv", "r") as f:
+  csvreader = csv.reader(f)
+  for row in csvreader: 
+    rows.append(row)
+print(rows[0])
+df = pd.read_csv("mergedStars.csv")
+df.drop(['Unnamed: 0','Unnamed: 6', 'Star_name.1', 'Distance.1', 'Mass.1', 'Radius.1','Luminosity'],axis=1,inplace=True)
+print(df)
+dfFinal=df.dropna()
+dfFinal.to_csv("mergedStars.csv")
